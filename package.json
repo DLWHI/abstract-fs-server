@@ -1,0 +1,44 @@
+{
+  "name": "abstract-fs-server",
+  "version": "1.0.0",
+  "description": "Basic backend-server for abstract-fs ui component",
+  "keywords": [
+    "file",
+    "browser",
+    "filebrowser",
+    "filesystem",
+    "server",
+    "backend",
+    "backend-agnostic",
+    "ui",
+    "universal",
+    "buildable",
+    "system"
+  ],
+  "homepage": "https://github.com/DLWHI/abstract-fs-server#readme",
+  "bugs": {
+    "url": "https://github.com/DLWHI/abstract-fs-server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/DLWHI/abstract-fs-server.git"
+  },
+  "license": "MIT",
+  "author": "dlwhi",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.3"
+  }
+}
