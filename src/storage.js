@@ -58,7 +58,6 @@ export async function getPathEntries(root, requestedPath = "/", maxStats = 5) {
   const entries = await readdir(absolutePath, { withFileTypes: true });
   const result = new Array(entries.length);
   let nextIndex = 0;
-
   async function collectEntries() {
     while (nextIndex < entries.length) {
       const index = nextIndex++;
@@ -91,7 +90,6 @@ export async function getPathEntries(root, requestedPath = "/", maxStats = 5) {
   await Promise.all(
     Array.from({ length: workerCount }, () => collectEntries()),
   );
-
   return result.filter((entry) => entry !== undefined);
 }
 

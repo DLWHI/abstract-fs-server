@@ -1,0 +1,45 @@
+#root {
+  margin: 0;
+  height: 100dvh;
+  width: 100vw;
+}
+
+:root {
+  --special: #006492;
+  --special-shimmer: #0e83b9;
+  --special-light: #006492;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="dark"],
+  .dark {
+    --afs-special: #2596be;
+  }
+}
+
+body {
+  margin: 0;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  height: 0.5rem;
+  background: linear-gradient(
+    90deg,
+    var(--special) 25%,
+    var(--special-shimmer) 50%,
+    var(--special-light) 90%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

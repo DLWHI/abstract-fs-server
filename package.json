@@ -15,13 +15,13 @@
     "buildable",
     "system"
   ],
-  "homepage": "https://github.com/DLWHI/abstract-fs-server#readme",
+  "homepage": "https://github.com/DLWHI/abstract-fs#readme",
   "bugs": {
-    "url": "https://github.com/DLWHI/abstract-fs-server/issues"
+    "url": "https://github.com/DLWHI/abstract-fs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/DLWHI/abstract-fs-server.git"
+    "url": "git+ssh://git@github.com/DLWHI/abstract-fs.git"
   },
   "license": "MIT",
   "author": "dlwhi",
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "abstract-fs": "file:../abstract-fs",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

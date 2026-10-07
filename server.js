@@ -1,19 +1,24 @@
 import express from "express";
+import cors from "cors";
 import path from "node:path";
 import { createWriteStream } from "node:fs";
-import { mkdir, rm, stat } from "node:fs/promises";
+import { mkdir, rm, stat, readdir } from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
-import {
-  getPathEntries,
-  getStorageInfo,
-  resolvePath,
-} from "./src/lib/local.js";
+import { getPathEntries, getStorageInfo, resolvePath } from "./src/storage.js";
 import config from "./config.json" with { type: "json" };
 
 const app = express();
 const root = config.root;
 const distPath = path.join(import.meta.dirname, "dist");
 mkdir(root, { recursive: true });
+app.use(cors(config.cors));
+
+function log(message, request) {
+  console.log(
+    `${new Date().toLocaleString()} | ${message}. Request: `,
+    request,
+  );
+}
 
 function getRequestPath(req, required = true) {
   const wildcard = req.params.path;
@@ -48,8 +53,9 @@ function sendError(res, error) {
 app.get("/storage/tree/{*path}", async (req, res) => {
   try {
     const files = await getPathEntries(root, getRequestPath(req, false));
-    res.json({ files });
+    res.json(files);
   } catch (error) {
+    log(`Error building tree path: ${error.message}`, req);
     sendError(res, error);
   }
 });
@@ -57,8 +63,9 @@ app.get("/storage/tree/{*path}", async (req, res) => {
 app.get("/storage/info", async (_req, res) => {
   try {
     const info = await getStorageInfo(root);
-    res.json({ info });
+    res.json(info);
   } catch (error) {
+    log(`Error aquring storage info: ${error.message}`, req);
     sendError(res, error);
   }
 });
@@ -76,6 +83,7 @@ app.get("/storage/file/{*path}", async (req, res) => {
 
     res.sendFile(filePath);
   } catch (error) {
+    log(`Error fetching file preview: ${error.message}`, req);
     if (res.headersSent) {
       res.destroy(error);
     } else {
@@ -93,6 +101,7 @@ app.post("/storage/file/{*path}", async (req, res) => {
     res.status(201).end();
   } catch (error) {
     if (output && !output.destroyed) output.destroy();
+    log(`Error receiving file to upload: ${error.message}`, req);
     sendError(res, error);
   }
 });
@@ -103,6 +112,7 @@ app.post("/storage/folder/{*path}", async (req, res) => {
     await mkdir(folderPath, { recursive: false });
     res.status(201).end();
   } catch (error) {
+    log(`Error creating folder: ${error.message}`, req);
     sendError(res, error);
   }
 });
@@ -121,20 +131,36 @@ app.delete("/storage/tree/{*path}", async (req, res) => {
     if (entryPath === path.resolve(root)) {
       throw new RangeError("Cannot delete the storage root");
     }
-
-    await rm(entryPath, { recursive: req.query.recursive === "true" });
+    const recursive = req.query.recursive === "true";
+    const details = await stat(entryPath);
+    // i hate js
+    if (details.isDirectory()) {
+      if (recursive) {
+        await rm(entryPath, { recursive: true });
+      } else {
+        const children = await readdir(entryPath);
+        if (children.length === 0) {
+          await rm(entryPath, { recursive: true });
+        } else {
+          log("Failed attempt to erase empty directory", req);
+          res.status(400).json({ error: "Directory is not empty" });
+          return;
+        }
+      }
+    } else if (details.isFile()) {
+      await rm(entryPath);
+    }
     res.status(204).end();
   } catch (error) {
+    log(`Error deleting folder: ${error.message}`, req);
     sendError(res, error);
   }
 });
 
 app.use(express.static(distPath));
 
-app.get("/{*path}", (_req, res) => {
-  res.sendFile(path.join(distPath, "index.html"));
-});
-
 app.listen(config.port, () => {
-  console.log(`Server is up and running at http://localhost:${config.port}`);
+  console.log(
+    `${new Date().toLocaleString()} | Server is up and running at http://localhost:${config.port}`,
+  );
 });

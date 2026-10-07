@@ -1,4 +1,5 @@
 package-lock.json
+storage
 # Logs
 logs
 *.log
