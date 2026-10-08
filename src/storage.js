@@ -55,7 +55,7 @@ function toStoragePath(absolutePath, root) {
 
 export async function getPathEntries(root, requestedPath = "/", maxStats = 5) {
   const absolutePath = resolvePath(requestedPath, root);
-  const entries = await readdir(absolutePath, { withFileTypes: true });
+  const entries = await readdir(absolutePath);
   const result = new Array(entries.length);
   let nextIndex = 0;
   async function collectEntries() {

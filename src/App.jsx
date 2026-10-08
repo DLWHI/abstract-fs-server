@@ -30,36 +30,36 @@ const provider = async (path) => {
 };
 
 const upload = async (file, path, onProgress) => {
-  const target = [path, file.name].filter(Boolean).join("/");
+  return new Promise((resolve, reject) => {
+    const target = [path, file.name].filter(Boolean).join("/");
 
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", `${hostname}/storage/file/${target}`);
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${hostname}/storage/file/${target}`);
 
-  xhr.upload.onprogress = (event) => {
-    if (event.lengthComputable) {
-      const percent = Math.round((event.loaded / event.total) * 100);
-      onProgress(percent);
-    }
-  };
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        onProgress(percent);
+      }
+    };
 
-  xhr.onload = () => {
-    if (xhr.status < 200 || xhr.status >= 300) {
-      const message = `File upload failed with status ${xhr.status}`;
-      alert(message);
-      console.log(message);
-    }
-    onProgress(0);
-  };
+    xhr.onload = () => {
+      onProgress(0);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+      } else {
+        reject(new Error("Network error during upload"));
+      }
+    };
 
-  xhr.onerror = () => {
-    const message = "Network error during upload";
-    alert(message);
-    console.log(message);
-    onProgress(0);
-  };
+    xhr.onerror = () => {
+      onProgress(0);
+      reject(new Error("Network error during upload"));
+    };
 
-  xhr.setRequestHeader("Content-Type", file.type);
-  xhr.send(file);
+    xhr.setRequestHeader("Content-Type", file.type);
+    xhr.send(file);
+  });
 };
 
 const erase = async (item) => {
@@ -111,7 +111,13 @@ export default function App() {
   const [progress, setProgress] = useState(0);
 
   const progressUpload = useCallback(async (file, path) => {
-    await upload(file, path, setProgress);
+    try {
+      await upload(file, path, setProgress);
+    } catch (err) {
+      const message = `File upload failed: ${err.message}`;
+      alert(message);
+      console.log(message);
+    }
   }, []);
 
   return (

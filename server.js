@@ -11,7 +11,7 @@ if (!config.root) {
   config.root = "./storage";
 }
 if (!config.port) {
-  config.port = 2999;
+  config.port = 3000;
 }
 
 const app = express();
@@ -67,7 +67,7 @@ app.get("/storage/tree/{*path}", async (req, res) => {
   }
 });
 
-app.get("/storage/info", async (_req, res) => {
+app.get("/storage/info", async (req, res) => {
   try {
     const info = await getStorageInfo(root);
     res.json(info);

@@ -24,7 +24,7 @@ If it prints `"Server is up and running at {hostname}"`, your file server is run
 Server can be configurated via `config.json` file. Options include:
 
 - root - Root folder of server. Path resolution is going relative to this path. Creates directory if it does not exist. Defaults to `"./storage"`
-- port - Port on which server should listen. Defaults to 3000
+- port - Port on which server should listen. Defaults to `3000`
 - cors - Additionaly, there is an option to specify CORS config in format of npm [`cors`](https://www.npmjs.com/package/cors) package.
 
 ## Storage API
