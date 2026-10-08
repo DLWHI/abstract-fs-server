@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { ReactFSExplorer } from "react-fs-explorer";
 import config from "../config.json";
 import "./index.css";
-import "abstract-fs/style.css";
+import "react-fs-explorer/style.css";
 
 const hostname = `http://localhost:${config.port}`;
 
