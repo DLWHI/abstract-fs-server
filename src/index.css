@@ -7,13 +7,13 @@
 :root {
   --special: #006492;
   --special-shimmer: #0e83b9;
-  --special-light: #006492;
 }
 
 @media (prefers-color-scheme: dark) {
   :root[data-theme="dark"],
   .dark {
-    --afs-special: #2596be;
+    --special: #0e83b9;
+    --special-shimmer: #006492;
   }
 }
 
@@ -29,7 +29,7 @@ body {
     90deg,
     var(--special) 25%,
     var(--special-shimmer) 50%,
-    var(--special-light) 90%
+    var(--special) 90%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;

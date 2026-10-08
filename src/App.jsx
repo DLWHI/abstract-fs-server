@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { ReactFSExplorer } from "react-fs-explorer";
+import { FSExplorer } from "react-fs-explorer";
 import config from "../config.json";
 import "./index.css";
 import "react-fs-explorer/style.css";
@@ -116,7 +116,7 @@ export default function App() {
 
   return (
     <>
-      <ReactFSExplorer
+      <FSExplorer
         provider={provider}
         sources={source}
         previews={source}
