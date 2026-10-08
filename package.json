@@ -32,11 +32,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "abstract-fs": "file:../abstract-fs",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "react-fs-explorer": "^0.1.0"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
