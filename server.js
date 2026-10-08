@@ -7,6 +7,13 @@ import { pipeline } from "node:stream/promises";
 import { getPathEntries, getStorageInfo, resolvePath } from "./src/storage.js";
 import config from "./config.json" with { type: "json" };
 
+if (!config.root) {
+  config.root = "./storage";
+}
+if (!config.port) {
+  config.port = 2999;
+}
+
 const app = express();
 const root = config.root;
 const distPath = path.join(import.meta.dirname, "dist");
